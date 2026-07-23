@@ -199,6 +199,32 @@
   }
   .csp-tool-cat p{ color:var(--muted); font-size:14.5px; }
 
+  /* ---------- PERSPECTIVE ---------- */
+  .csp-pt-icon{
+    width:38px; height:38px; border-radius:9px;
+    background:var(--thread-dim);
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px;
+  }
+  .csp-pt-icon svg{ width:19px; height:19px; color:var(--thread); }
+  .csp-credential{
+    margin-top:22px;
+    display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--line-strong); border-radius:10px;
+    padding:18px 20px;
+  }
+  .csp-credential .csp-cred-icon{
+    width:34px; height:34px; border-radius:8px; flex:none;
+    background:var(--signal-dim);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .csp-credential .csp-cred-icon svg{ width:17px; height:17px; color:var(--signal); }
+  .csp-credential h4{
+    font-family:var(--f-display); font-size:15px; color:var(--text); margin:0 0 4px;
+  }
+  .csp-credential p{ font-size:13px; color:var(--muted); margin:0; }
+  .csp-credential .csp-cred-body{ flex:1; min-width:220px; }
+
   /* ---------- FOOTER ---------- */
   .csp-footer{ padding:64px 0 80px; }
   .csp-footer h2{ font-size:clamp(28px,4vw,40px); max-width:640px; }
@@ -294,6 +320,75 @@
       <div class="csp-tool-cat">
         <h4>Education</h4>
         <p>BSc Mathematics with Computing (University of Embu) · AI Career Essentials (ALX Africa) · Confluence Fundamentals (Atlassian University).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="csp-wrap csp-section" id="perspective">
+    <div class="csp-eyebrow">Field notes</div>
+    <h2 style="font-size:clamp(24px,3.4vw,32px);">Where Empathy Meets Execution</h2>
+    <p style="color:var(--muted); margin-top:10px; max-width:640px; font-size:15.5px;">
+      Working notes on how human-centred design thinking actually shows up in the day-to-day of running product and programme teams — not as a workshop you run once, but as a default way of seeing the work.
+    </p>
+
+    <div class="csp-case-grid" style="margin-top:32px;">
+      <div>
+        <div class="csp-pt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <h4>Empathy is a scheduling decision</h4>
+        <p>Most teams say they're user-centred. Few put a real user in the room before the roadmap is locked. The teams I run treat empathy as an operational choice, not a mindset: field visits before sprint planning, apprentice reports read in full, support tickets triaged by the product lead — not just support. Understanding shows up in the calendar before it shows up in the deck.</p>
+      </div>
+      <div>
+        <div class="csp-pt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h12v8H9l-4 4v-4H4z"/>
+            <path d="M20 9v8l-4 4v-4h-4"/>
+          </svg>
+        </div>
+        <h4>Prototypes are for arguments, not approval</h4>
+        <p>A prototype's job is to surface disagreement early, while it's still cheap to be wrong. In practice, that means treating early design reviews as a place to find the sharpest objection in the room, not to collect sign-off. If a review ends with everyone nodding, the prototype probably wasn't specific enough to disagree with.</p>
+      </div>
+      <div>
+        <div class="csp-pt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="13" r="8"/>
+            <path d="M12 9v4l3 2"/>
+            <path d="M9 2h6"/>
+          </svg>
+        </div>
+        <h4>Iteration needs a stopping rule</h4>
+        <p>Rapid iteration without a defined "good enough" just produces busywork with better vocabulary. Every sprint I run pairs the iteration loop with an explicit threshold — a metric, a user reaction, a deadline — so teams know when to stop refining and ship.</p>
+      </div>
+      <div>
+        <div class="csp-pt-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5" cy="6" r="2.2"/>
+            <circle cx="19" cy="6" r="2.2"/>
+            <circle cx="12" cy="18" r="2.2"/>
+            <path d="M6.8 7.6 10.5 16"/>
+            <path d="M17.2 7.6 13.5 16"/>
+            <path d="M7.2 6h9.6"/>
+          </svg>
+        </div>
+        <h4>Innovation is a distribution problem</h4>
+        <p>Across bootcamps, marketplaces, and county health rollouts, the bottleneck is rarely the idea — it's getting a good idea to the fiftieth apprentice or the thousandth trader in a form they'll actually use. Coordination and design thinking end up being the same discipline in practice: closing the gap between what's possible and what's usable, at scale, on a deadline.</p>
+      </div>
+    </div>
+
+    <div class="csp-credential">
+      <div class="csp-cred-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 2 7l10 5 10-5-10-5Z"/>
+          <path d="M6 10v6c0 1.5 3 3 6 3s6-1.5 6-3v-6"/>
+        </svg>
+      </div>
+      <div class="csp-cred-body">
+        <h4>Design Thinking Mentor — 7th Regional Research &amp; Innovation Conference (EPRA), 2026</h4>
+        <p>Mentored participant teams in solution development and facilitated virtual design thinking workshops.</p>
       </div>
     </div>
   </div>
