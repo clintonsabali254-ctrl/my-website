@@ -1,0 +1,452 @@
+<style>
+  :root{
+    --ink:#0F1B2D;
+    --panel:#152238;
+    --panel-2:#1C2C46;
+    --line:rgba(236,239,244,0.09);
+    --line-strong:rgba(236,239,244,0.16);
+    --signal:#E8A33D;
+    --signal-dim:rgba(232,163,61,0.15);
+    --thread:#4FB6A6;
+    --thread-dim:rgba(79,182,166,0.15);
+    --text:#ECEFF4;
+    --muted:#8CA0B3;
+    --muted-2:#5E7387;
+    --f-display:'Avenir Next','Segoe UI',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+    --f-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --f-mono:'SF Mono','Roboto Mono','Consolas','Menlo','Liberation Mono',monospace;
+  }
+
+  .csp-root *{ box-sizing:border-box; }
+  .csp-root{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--f-body);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .csp-root h1,.csp-root h2,.csp-root h3{
+    font-family:var(--f-display);
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .csp-root .mono{ font-family:var(--f-mono); }
+  .csp-root a{ color:var(--thread); }
+  .csp-root :focus-visible{ outline:2px solid var(--thread); outline-offset:3px; border-radius:2px; }
+
+  .csp-wrap{ max-width:1080px; margin:0 auto; padding:0 28px; }
+  .csp-section{ padding:88px 0; border-bottom:1px solid var(--line); }
+  .csp-section:last-child{ border-bottom:none; }
+
+  .csp-eyebrow{
+    font-family:var(--f-mono);
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    color:var(--signal);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .csp-eyebrow::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:var(--signal);
+    box-shadow:0 0 0 4px var(--signal-dim);
+  }
+
+  /* ---------- HERO ---------- */
+  .csp-hero{ padding:96px 0 64px; border-bottom:1px solid var(--line); }
+  .csp-hero h1{
+    font-size:clamp(38px,6vw,64px);
+    font-weight:700;
+    line-height:1.02;
+  }
+  .csp-hero .csp-role{
+    margin-top:14px;
+    font-size:clamp(17px,2.2vw,20px);
+    color:var(--muted);
+    max-width:640px;
+  }
+  .csp-hero .csp-role b{ color:var(--text); font-weight:600; }
+  .csp-meta-row{
+    display:flex; flex-wrap:wrap; gap:10px 22px;
+    margin-top:28px;
+    font-family:var(--f-mono);
+    font-size:13px;
+    color:var(--muted-2);
+  }
+  .csp-meta-row span b{ color:var(--muted); font-weight:500; }
+
+  /* ---------- BOARD (signature element) ---------- */
+  .csp-board-head{
+    display:grid;
+    grid-template-columns: 90px 1fr 170px 190px 150px;
+    gap:16px;
+    padding:10px 18px;
+    font-family:var(--f-mono);
+    font-size:11px;
+    letter-spacing:0.08em;
+    color:var(--muted-2);
+    text-transform:uppercase;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .csp-board{
+    margin-top:34px;
+    border:1px solid var(--line-strong);
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--panel);
+  }
+  .csp-row{
+    display:grid;
+    grid-template-columns: 90px 1fr 170px 190px 150px;
+    gap:16px;
+    align-items:center;
+    padding:16px 18px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+    background:transparent;
+    transition:background .15s ease;
+    text-align:left;
+    width:100%;
+    color:inherit;
+    font:inherit;
+  }
+  .csp-row:last-child{ border-bottom:none; }
+  .csp-row:hover, .csp-row:focus-visible{ background:var(--panel-2); }
+  .csp-code{ font-family:var(--f-mono); font-size:12.5px; color:var(--thread); }
+  .csp-prog b{ display:block; font-size:14.5px; font-weight:600; color:var(--text); }
+  .csp-prog span{ display:block; font-size:12.5px; color:var(--muted-2); margin-top:2px; }
+  .csp-loc{ font-family:var(--f-mono); font-size:12px; color:var(--muted); }
+  .csp-loc small{ display:block; color:var(--muted-2); margin-top:2px; }
+  .csp-role-cell{ font-size:12.5px; color:var(--muted); }
+  .csp-status{ font-family:var(--f-mono); font-size:11px; display:flex; align-items:center; gap:7px; }
+  .csp-dot{ width:7px; height:7px; border-radius:50%; flex:none; }
+  .csp-dot.active{ background:var(--signal); box-shadow:0 0 0 3px var(--signal-dim); animation:csp-pulse 2.2s ease-in-out infinite; }
+  .csp-dot.done{ background:var(--muted-2); }
+  .csp-status.active-text{ color:var(--signal); }
+  .csp-status.done-text{ color:var(--muted-2); }
+  @keyframes csp-pulse{ 0%,100%{ opacity:1; } 50%{ opacity:.35; } }
+  @media (prefers-reduced-motion: reduce){ .csp-dot.active{ animation:none; } }
+
+  .csp-board-note{
+    margin-top:14px;
+    font-size:12.5px;
+    color:var(--muted-2);
+    font-family:var(--f-mono);
+  }
+
+  /* ---------- CASE STUDIES ---------- */
+  .csp-case-head{ max-width:620px; }
+  .csp-case-head p{ color:var(--muted); font-size:15.5px; }
+
+  .csp-case{
+    margin-top:40px;
+    padding:32px;
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    border-radius:12px;
+    scroll-margin-top:24px;
+  }
+  .csp-case + .csp-case{ margin-top:24px; }
+  .csp-case-top{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;
+  }
+  .csp-case-top .csp-code{ font-size:12px; }
+  .csp-case h3{ font-size:22px; margin-top:6px; }
+  .csp-case .csp-loc-line{
+    font-family:var(--f-mono); font-size:12px; color:var(--muted-2); margin-top:6px;
+  }
+  .csp-case-grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap:28px;
+    margin-top:22px;
+  }
+  .csp-case p, .csp-case li{ font-size:14.5px; color:var(--muted); }
+  .csp-case h4{
+    font-family:var(--f-mono);
+    font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--thread); margin-bottom:10px;
+  }
+  .csp-case ul{ margin:0; padding-left:18px; }
+  .csp-case li{ margin-bottom:8px; }
+  .csp-case li::marker{ color:var(--signal); }
+
+  .csp-stats{ display:flex; flex-direction:column; gap:16px; }
+  .csp-stat{ border-left:2px solid var(--signal); padding-left:14px; }
+  .csp-stat .csp-num{ font-family:var(--f-display); font-size:26px; font-weight:700; color:var(--text); line-height:1; }
+  .csp-stat .csp-label{ font-size:12.5px; color:var(--muted-2); margin-top:4px; }
+
+  /* ---------- MORE WORK STRIP ---------- */
+  .csp-strip{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:28px; }
+  .csp-chip{
+    background:var(--panel); border:1px solid var(--line-strong); border-radius:10px;
+    padding:20px;
+  }
+  .csp-chip .csp-code{ font-size:11.5px; }
+  .csp-chip h4{ font-family:var(--f-display); font-size:15.5px; margin-top:8px; color:var(--text); }
+  .csp-chip p{ font-size:13px; color:var(--muted); margin-top:8px; }
+
+  /* ---------- TOOLKIT ---------- */
+  .csp-toolkit-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:28px 40px; margin-top:36px; }
+  .csp-tool-cat h4{
+    font-family:var(--f-mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    color:var(--signal); margin-bottom:10px;
+  }
+  .csp-tool-cat p{ color:var(--muted); font-size:14.5px; }
+
+  /* ---------- FOOTER ---------- */
+  .csp-footer{ padding:64px 0 80px; }
+  .csp-footer h2{ font-size:clamp(28px,4vw,40px); max-width:640px; }
+  .csp-footer p{ color:var(--muted); margin-top:14px; max-width:520px; }
+  .csp-contact-row{
+    display:flex; flex-wrap:wrap; gap:28px; margin-top:30px;
+    font-family:var(--f-mono); font-size:14px;
+  }
+  .csp-contact-row a{ color:var(--text); text-decoration:none; border-bottom:1px solid var(--line-strong); padding-bottom:2px; }
+  .csp-contact-row a:hover{ color:var(--signal); border-color:var(--signal); }
+  .csp-foot-note{ margin-top:56px; font-size:12px; color:var(--muted-2); font-family:var(--f-mono); }
+
+  @media (max-width:820px){
+    .csp-board-head{ display:none; }
+    .csp-row{ grid-template-columns:1fr; gap:6px; padding:16px; }
+    .csp-loc, .csp-role-cell, .csp-status{ padding-left:0; }
+    .csp-case-grid{ grid-template-columns:1fr; }
+    .csp-strip{ grid-template-columns:1fr; }
+    .csp-toolkit-grid{ grid-template-columns:1fr; }
+    .csp-section{ padding:56px 0; }
+  }
+</style>
+
+<div class="csp-root">
+  <div class="csp-wrap csp-hero">
+    <div class="csp-eyebrow">Live coordination record</div>
+    <h1>Clinton Sabali</h1>
+    <p class="csp-role">
+      I keep <b>distributed product and programme teams</b> shipping — across sectors, sprints, and
+      borders. Certified Scrum Master and Program/Project Manager running agile delivery and
+      cross-border innovation initiatives out of Nairobi.
+    </p>
+    <div class="csp-meta-row">
+      <span><b>Based in</b> Nairobi, Kenya · UTC+3</span>
+      <span><b>Currently</b> QLab (Qhala Limited)</span>
+      <span><b>Certifications</b> SFC · Scrum for Ops &amp; DevOps</span>
+    </div>
+  </div>
+
+  <div class="csp-wrap csp-section" id="board">
+    <div class="csp-eyebrow">Programme board</div>
+    <h2 style="font-size:clamp(24px,3.4vw,32px);">Everything currently — and recently — in flight</h2>
+    <p style="color:var(--muted); margin-top:10px; max-width:600px; font-size:15px;">
+      Nine programmes, five countries, one coordination cadence. Click a row to jump to the full case study.
+    </p>
+
+    <div class="csp-board-head">
+      <div>Code</div><div>Programme</div><div>Location</div><div>Role</div><div>Status</div>
+    </div>
+    <div class="csp-board" id="csp-board-list"></div>
+    <div class="csp-board-note">Board reflects roles held April 2024 – present. Full detail in case studies below.</div>
+  </div>
+
+  <div class="csp-wrap csp-section" id="cases">
+    <div class="csp-eyebrow">Case studies</div>
+    <div class="csp-case-head">
+      <h2 style="font-size:clamp(24px,3.4vw,32px);">How the coordination actually happens</h2>
+      <p>Six programmes, in more depth: the context, what I owned, and what shipped.</p>
+    </div>
+    <div id="csp-case-list"></div>
+  </div>
+
+  <div class="csp-wrap csp-section" id="more">
+    <div class="csp-eyebrow">More coordination work</div>
+    <h2 style="font-size:clamp(22px,3vw,28px);">Shorter engagements, same cadence</h2>
+    <div class="csp-strip" id="csp-strip-list"></div>
+  </div>
+
+  <div class="csp-wrap csp-section" id="toolkit">
+    <div class="csp-eyebrow">Toolkit</div>
+    <h2 style="font-size:clamp(24px,3.4vw,32px);">How I run the room</h2>
+    <div class="csp-toolkit-grid">
+      <div class="csp-tool-cat">
+        <h4>Agile &amp; Rapid Iteration</h4>
+        <p>Sprint planning, backlog grooming, daily stand-ups, OKR implementation, fast feedback loops, cross-functional coordination.</p>
+      </div>
+      <div class="csp-tool-cat">
+        <h4>Design &amp; Product Collaboration</h4>
+        <p>Figma (prototype review &amp; design collaboration), Confluence, Jira — working day-to-day alongside UX research and product teams.</p>
+      </div>
+      <div class="csp-tool-cat">
+        <h4>Team Leadership</h4>
+        <p>Remote team management, staff training &amp; mentorship, performance monitoring, stakeholder engagement.</p>
+      </div>
+      <div class="csp-tool-cat">
+        <h4>Communication</h4>
+        <p>Constructive feedback, conflict resolution, cross-border collaboration, virtual facilitation.</p>
+      </div>
+      <div class="csp-tool-cat">
+        <h4>Technical</h4>
+        <p>Data analysis, Python, Power BI, SQL.</p>
+      </div>
+      <div class="csp-tool-cat">
+        <h4>Education</h4>
+        <p>BSc Mathematics with Computing (University of Embu) · AI Career Essentials (ALX Africa) · Confluence Fundamentals (Atlassian University).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="csp-wrap csp-footer">
+    <h2>Coordinating the next one from Nairobi — wherever the team is.</h2>
+    <p>Open to Program/Project Management and Scrum Master roles leading distributed, cross-functional product teams.</p>
+    <div class="csp-contact-row">
+      <a href="mailto:clintonsabali254@gmail.com">clintonsabali254@gmail.com</a>
+      <a href="tel:+254746767006">+254 746 767 006</a>
+      <a href="#" onclick="return false;">LinkedIn: Clinton Sabali</a>
+    </div>
+    <div class="csp-foot-note">Kiswahili (Native) · English (Expert)</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var board = [
+    { code:"QLAB-01", name:"QLab Venture Studio", sub:"Hakii AI · Bodacare · Tibalink · Atunzi · Ufahamu AI", loc:"Nairobi, Kenya", tz:"UTC+3", role:"Team Lead &amp; Scrum Master", status:"active", dates:"Apr 2024 –", case:"case-qlab" },
+    { code:"LAP-254", name:"LREB Afyanalytics Programme", sub:"Migori County field deployment", loc:"Migori County, Kenya", tz:"UTC+3", role:"Project Manager", status:"active", dates:"Jul 2026 –", case:"case-lap" },
+    { code:"MST-026", name:"Mistral AI Bootcamp / AEDIB", sub:"Post-bootcamp venture incubation", loc:"Nairobi, Kenya", tz:"UTC+3", role:"Bootcamp &amp; Post-Bootcamp Coordinator", status:"active", dates:"Jun 2026 –", case:"case-mistral" },
+    { code:"CNX-020", name:"CANEX Marketplace", sub:"canex.africa — B2B trade platform", loc:"Cairo, Egypt", tz:"UTC+2", role:"Scrum Master", status:"active", dates:"Apr 2025 –", case:"case-canex" },
+    { code:"IATF-025", name:"IATF Digital Platform", sub:"iatf.africa — registration &amp; ticketing", loc:"Cairo, Egypt", tz:"UTC+2", role:"Product Manager", status:"done", dates:"May – Sep 2025", case:"case-iatf" },
+    { code:"AIV-IND", name:"Africa AI Village Expo", sub:"@ India AI Impact Summit", loc:"New Delhi, India", tz:"UTC+5:30", role:"Program Coordinator", status:"done", dates:"Nov 2025 – Feb 2026", case:"case-aiv" },
+    { code:"AFCFTA-25", name:"AfCFTA Innovation Challenge", sub:"Pan-African submissions &amp; jury process", loc:"Lusaka, Zambia", tz:"UTC+2", role:"Program Coordinator", status:"done", dates:"May – Sep 2025", case:"strip-afcfta" },
+    { code:"S360-UK", name:"Startup 360 Connect Programme", sub:"UK–Kenya startup collaboration", loc:"Nairobi ⇄ UK", tz:"UTC+0/+3", role:"Program Coordinator", status:"done", dates:"May – Sep 2025", case:"strip-s360" },
+    { code:"LAD-025", name:"Luanda Financing Summit", sub:"Africa infrastructure financing", loc:"Luanda, Angola", tz:"UTC+1", role:"Program Coordinator", status:"done", dates:"Sep – Oct 2025", case:"strip-luanda" }
+  ];
+
+  var boardEl = document.getElementById('csp-board-list');
+  board.forEach(function(r){
+    var btn = document.createElement('button');
+    btn.className = 'csp-row';
+    btn.setAttribute('data-target', r.case);
+    btn.innerHTML =
+      '<div class="csp-code">'+r.code+'</div>' +
+      '<div class="csp-prog"><b>'+r.name+'</b><span>'+r.sub+'</span></div>' +
+      '<div class="csp-loc">'+r.loc+'<small>'+r.tz+'</small></div>' +
+      '<div class="csp-role-cell">'+r.role+'</div>' +
+      '<div class="csp-status '+(r.status==='active'?'active-text':'done-text')+'"><span class="csp-dot '+(r.status==='active'?'active':'done')+'"></span>'+(r.status==='active'?'ACTIVE':'COMPLETE')+' · '+r.dates+'</div>';
+    btn.addEventListener('click', function(){
+      var target = document.getElementById(r.case);
+      if(target){ target.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+    boardEl.appendChild(btn);
+  });
+
+  var cases = [
+    {
+      id:"case-qlab", code:"QLAB-01 / NBO", title:"QLab Operations — Team Lead &amp; Scrum Master",
+      loc:"Qhala Limited · Nairobi, Kenya · Apr 2024 – Present",
+      context:"QLab is Qhala's venture studio, running five concurrent ventures — Hakii AI, Bodacare, Tibalink, Atunzi, and Ufahamu AI — each with its own UX, engineering, and data team.",
+      actions:[
+        "Run structured sprint planning, backlog grooming, and daily stand-ups across all five ventures, keeping design-to-development handoffs fast and in sync.",
+        "Review interactive Figma prototypes with design leads and translate stakeholder feedback directly into next-sprint priorities.",
+        "Track team performance against OKRs, closing the loop between design/development work and business outcomes.",
+        "Facilitate stakeholder demos and project review meetings, removing impediments in real time."
+      ],
+      stats:[ {n:"+15%", l:"lab operations productivity"}, {n:"−20%", l:"operational downtime"}, {n:"−18%", l:"project cycle time"} ]
+    },
+    {
+      id:"case-lap", code:"LAP-254 / MIGORI", title:"LREB Afyanalytics Programme — Project Manager",
+      loc:"Migori County, Kenya · Jul 2026 – Present",
+      context:"A county-level health data programme deploying field apprentices across public hospitals and mapping private health facilities for the Migori County Health Management Team.",
+      actions:[
+        "Oversee a field team of 5 apprentices deployed across Migori County Referral Hospital, Rongo Sub-County Hospital, Nyamaraga Sub-County Hospital, and private facilities across Awendo Sub-County.",
+        "Consolidate monthly county progress reporting on EMR/Tiberbu mentorship, patient-file coding, and private-facility mapping for county health leadership.",
+        "Identified and escalated a significant discrepancy between the Tiberbu and Apindi reporting systems, coordinating cross-facility reconciliation.",
+        "Manage placement logistics, device availability, and system performance constraints across host facilities."
+      ],
+      stats:[ {n:"5", l:"field apprentices managed"}, {n:"3", l:"public hospitals + private network"}, {n:"1", l:"critical data discrepancy caught &amp; escalated"} ]
+    },
+    {
+      id:"case-mistral", code:"MST-026 / AEDIB", title:"Mistral AI Bootcamp &amp; Post-Bootcamp Incubation — Coordinator",
+      loc:"QLab / Qhala Limited, with French Tech Nairobi &amp; Expertise France (AEDIB) · Jun 2026 – Present",
+      context:"A pan-African AI bootcamp narrowing 50–80 innovators down to six ventures — two per sector across education, health, and agriculture — followed by a 12-month AEDIB-sponsored incubation programme.",
+      actions:[
+        "Coordinate design and delivery of the bootcamp and the 12-month Post-Bootcamp Venture Incubation Programme.",
+        "Support venture selection and QLab's embedded co-founder support across product, go-to-market, technical infrastructure, and investor readiness.",
+        "Coordinate corporate venture capital pathway introductions alongside French Tech Nairobi and AEDIB's ecosystem partners.",
+        "Developed the milestone-tied 12-month workplan aligned to the AEDIB Terms of Reference deliverables and payment schedule."
+      ],
+      stats:[ {n:"6", l:"ventures selected for incubation"}, {n:"50–80", l:"innovators in originating cohort"}, {n:"12mo", l:"milestone-tied workplan delivered"} ]
+    },
+    {
+      id:"case-canex", code:"CNX-020 / CAI", title:"CANEX Marketplace — Scrum Master",
+      loc:"canex.africa · Cairo, Egypt · Apr 2025 – Present",
+      context:"A B2B marketplace built by a fully distributed development team, coordinated remotely across time zones.",
+      actions:[
+        "Serve as Scrum Master for distributed teams, facilitating sprint planning and backlog grooming sessions remotely.",
+        "Coordinate cross-functional teams across development phases, removing impediments to keep execution smooth.",
+        "Monitor project progress and report to stakeholders, ensuring alignment on deliverables."
+      ],
+      stats:[ {n:"100%", l:"remote sprint cadence maintained"} ]
+    },
+    {
+      id:"case-iatf", code:"IATF-025 / CAI", title:"IATF Digital Platform — Product Manager",
+      loc:"iatf.africa · Cairo, Egypt · May – Sep 2025",
+      context:"Registration and ticketing systems for the Intra-African Trade Fair digital platform, built to scale to tens of thousands of attendees.",
+      actions:[
+        "Led end-to-end delivery of registration and ticketing systems.",
+        "Managed project timelines and resource allocation across multiple workstreams.",
+        "Ensured platform scalability and coordinated development of media portals for trade fair participants."
+      ],
+      stats:[ {n:"50,000+", l:"user capacity delivered"} ]
+    },
+    {
+      id:"case-aiv", code:"AIV-IND / DEL", title:"Africa AI Village Expo — Program Coordinator",
+      loc:"India AI Impact Summit · New Delhi, India · Nov 2025 – Feb 2026",
+      context:"A showcase bringing African AI startups onto a global stage alongside the India AI Impact Summit, coordinated across continents and agencies.",
+      actions:[
+        "Orchestrated participation of 20+ innovations and startups from 15 African countries.",
+        "Managed cross-border collaboration between Smart Africa and UNDP, keeping virtual coordination and deliverables aligned.",
+        "Fostered a positive ecosystem culture while managing diverse stakeholder expectations remotely."
+      ],
+      stats:[ {n:"20+", l:"startups showcased"}, {n:"15", l:"African countries represented"} ]
+    }
+  ];
+
+  var caseListEl = document.getElementById('csp-case-list');
+  cases.forEach(function(c){
+    var el = document.createElement('div');
+    el.className = 'csp-case';
+    el.id = c.id;
+    var statsHtml = c.stats.map(function(s){
+      return '<div class="csp-stat"><div class="csp-num">'+s.n+'</div><div class="csp-label">'+s.l+'</div></div>';
+    }).join('');
+    var actionsHtml = c.actions.map(function(a){ return '<li>'+a+'</li>'; }).join('');
+    el.innerHTML =
+      '<div class="csp-case-top">' +
+        '<div><div class="csp-code">'+c.code+'</div><h3>'+c.title+'</h3><div class="csp-loc-line">'+c.loc+'</div></div>' +
+      '</div>' +
+      '<p style="margin-top:16px;">'+c.context+'</p>' +
+      '<div class="csp-case-grid">' +
+        '<div><h4>What I did</h4><ul>'+actionsHtml+'</ul></div>' +
+        '<div><h4>Outcome</h4><div class="csp-stats">'+statsHtml+'</div></div>' +
+      '</div>';
+    caseListEl.appendChild(el);
+  });
+
+  var strip = [
+    { code:"AFCFTA-25", id:"strip-afcfta", title:"AfCFTA Innovation Challenge", body:"Managed pan-African stakeholder engagement, submission processes, and digital jury evaluation for the continental innovation challenge." },
+    { code:"S360-UK", id:"strip-s360", title:"Startup 360 Connect Programme", body:"Curated a UK–Kenya startup collaboration programme, connecting Kenyan founders with UK investors across time zones." },
+    { code:"LAD-025", id:"strip-luanda", title:"Luanda Financing Summit", body:"Brought African startups to Africa's infrastructure financing summit, facilitating investor and policymaker exposure." }
+  ];
+  var stripEl = document.getElementById('csp-strip-list');
+  strip.forEach(function(s){
+    var el = document.createElement('div');
+    el.className = 'csp-chip';
+    el.id = s.id;
+    el.innerHTML = '<div class="csp-code mono">'+s.code+'</div><h4>'+s.title+'</h4><p>'+s.body+'</p>';
+    stripEl.appendChild(el);
+  });
+})();
+</script>
